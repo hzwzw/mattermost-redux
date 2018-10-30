@@ -467,7 +467,7 @@ export function getChannelAndMyMember(channelId) {
     };
 }
 
-export function fetchMyChannelsAndMembers(teamId) {
+export function fetchMyChannelsAndMembers(teamId, page = 0, perPage = General.CHANNELS_CHUNK_SIZE, rank = -1) {
     return async (dispatch, getState) => {
         dispatch(batchActions([
             {
@@ -478,8 +478,8 @@ export function fetchMyChannelsAndMembers(teamId) {
             },
         ]), getState);
 
-        const channelsRequest = Client4.getMyChannels(teamId);
-        const channelMembersRequest = Client4.getMyChannelMembers(teamId);
+        const channelsRequest = Client4.getMyChannels(teamId, page, perPage, rank);
+        const channelMembersRequest = Client4.getMyChannelMembers(teamId, page, perPage, rank);
 
         let channels;
         try {

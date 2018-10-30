@@ -1225,9 +1225,9 @@ export default class Client4 {
         );
     };
 
-    getMyChannels = async (teamId) => {
+    getMyChannels = async (teamId, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1) => {
         return this.doFetch(
-            `${this.getUserRoute('me')}/teams/${teamId}/channels`,
+            `${this.getUserRoute('me')}/teams/${teamId}/channels${buildQueryString({page, per_page: perPage, rank})}`,
             {method: 'get'}
         );
     };
@@ -1239,9 +1239,9 @@ export default class Client4 {
         );
     };
 
-    getMyChannelMembers = async (teamId) => {
+    getMyChannelMembers = async (teamId, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1) => {
         return this.doFetch(
-            `${this.getUserRoute('me')}/teams/${teamId}/channels/members`,
+            `${this.getUserRoute('me')}/teams/${teamId}/channels/members${buildQueryString({page, per_page: perPage, rank})}`,
             {method: 'get'}
         );
     };
