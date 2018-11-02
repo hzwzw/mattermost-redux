@@ -548,6 +548,20 @@ export function sortChannelsByDisplayNameAndMuted(locale, members, a, b) {
     return -1;
 }
 
+export function sortChannelsByLatestTimeAndRank(a, b) {
+    if (a.rank !== b.rank) {
+        return b.rank - a.rank;
+    }
+
+    if (typeof a.last_post_at === 'undefined') {
+        return 1;
+    }
+    if (typeof b.last_post_at === 'undefined') {
+        return -1;
+    }
+    return b.last_post_at - a.last_post_at;
+}
+
 export function isChannelMuted(member) {
     return member && member.notify_props ? (member.notify_props.mark_unread === 'mention') : false;
 }

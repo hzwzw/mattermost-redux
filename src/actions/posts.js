@@ -51,6 +51,12 @@ export function getPost(postId) {
     };
 }
 
+export function createAenginePost(postContent) {
+    return async (dispatch, getState) => {
+        Client4.createAenginePost(postContent);
+    };
+}
+
 export function createPost(post, files = []) {
     return async (dispatch, getState) => {
         const state = getState();

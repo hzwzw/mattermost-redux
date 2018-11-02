@@ -402,6 +402,51 @@ function stats(state = {}, action) {
     }
 }
 
+function aengineRank(state = {}, action) {
+    switch (action.type) {
+    case ChannelTypes.AENGINE_CHANNEL_FILTER: {
+        if (typeof action.data.aengineRank !== 'undefined') {
+            return action.data.aengineRank;
+        }
+        return state;
+    }
+    case UserTypes.LOGOUT_SUCCESS:
+        return -1;
+    default:
+        return state;
+    }
+}
+
+function aenginePage(state = {}, action) {
+    switch (action.type) {
+        case ChannelTypes.AENGINE_CHANNEL_FILTER: {
+            if (typeof action.data.aenginePage !== 'undefined') {
+                return action.data.aenginePage;
+            }
+            return state;
+        }
+        case UserTypes.LOGOUT_SUCCESS:
+            return 0;
+        default:
+            return state;
+    }
+}
+
+function aengineOnlyUnReplied(state = {}, action) {
+    switch (action.type) {
+        case ChannelTypes.AENGINE_CHANNEL_FILTER: {
+            if (typeof action.data.aengineOnlyUnReplied !== 'undefined') {
+                return action.data.aengineOnlyUnReplied;
+            }
+            return state;
+        }
+        case UserTypes.LOGOUT_SUCCESS:
+            return true;
+        default:
+            return state;
+    }
+}
+
 function updateChannelMemberSchemeRoles(state, action) {
     const {channelId, userId, isSchemeUser, isSchemeAdmin} = action.data;
     const channel = state[channelId];
@@ -443,4 +488,8 @@ export default combineReducers({
 
     // object where every key is the channel id and has an object with the channel stats
     stats,
+
+    aengineRank,
+    aenginePage,
+    aengineOnlyUnReplied,
 });

@@ -41,6 +41,7 @@ import {
     isGroupOrDirectChannelVisible,
     sortChannelsByDisplayName,
     sortChannelsByDisplayNameAndMuted,
+    sortChannelsByLatestTimeAndRank,
 } from 'utils/channel_utils';
 import {createIdsSelector} from 'utils/helpers';
 
@@ -450,6 +451,9 @@ export const getUnreadChannelIds = createIdsSelector(
             const c = channels[id];
             const m = members[id];
 
+            if (c.is_aengine === true) {
+                return false;
+            }
             if (c && m) {
                 const chHasUnread = (c.total_msg_count - m.msg_count) > 0;
                 const chHasMention = m.mention_count > 0;
@@ -460,7 +464,7 @@ export const getUnreadChannelIds = createIdsSelector(
             return false;
         });
 
-        if (lastUnreadChannel && !unreadIds.includes(lastUnreadChannel.id)) {
+        if (lastUnreadChannel && !unreadIds.includes(lastUnreadChannel.id) && lastUnreadChannel.is_aengine !== true) {
             unreadIds.push(lastUnreadChannel.id);
         }
 
@@ -633,11 +637,53 @@ export const getSortedPrivateChannelWithUnreadsIds = createIdsSelector(
                 return false;
             }
             const channel = channels[id];
+            if (channel.is_aengine === true) {
+                return false;
+            }
             return !favoriteIds.includes(id) && teamChannelIds.includes(id) &&
                 channel.type === General.PRIVATE_CHANNEL;
         }).map((id) => channels[id]).
             sort(sortChannelsByDisplayNameAndMuted.bind(null, locale, myMembers));
         return privateChannels.map((c) => c.id);
+    }
+);
+
+export const getSortedAengineChannelIds = createIdsSelector(
+    getCurrentUser,
+    getAllChannels,
+    getMyChannelMemberships,
+    getChannelIdsForCurrentTeam,
+    getSortedFavoriteChannelWithUnreadsIds,
+    (state) => {return state},
+    (currentUser, channels, myMembers, teamChannelIds, favoriteIds, state) => {
+        if (!currentUser) {
+            return [];
+        }
+        const {aengineRank, aengineOnlyUnReplied, aenginePage} = state.entities.channels;
+        const privateChannels = teamChannelIds.filter((id) => {
+            if (!myMembers[id]) {
+                return false;
+            }
+            const channel = channels[id];
+            // let condition = !favoriteIds.includes(id) &&
+                let condition =    teamChannelIds.includes(id) &&
+                channel.type === General.PRIVATE_CHANNEL &&
+                channel.is_aengine === true;
+            if (aengineRank >= 0 && aengineRank <= 5) {
+                condition = condition && (channel.rank === aengineRank);
+            }
+            if (aengineOnlyUnReplied) {
+                condition = condition && channel.is_replied === false;
+            }
+            return condition;
+        }).map((id) => channels[id]).
+            sort(sortChannelsByLatestTimeAndRank);
+        const start = aenginePage * 50;
+        const sliced = privateChannels.slice(start, start + 50);
+        return {
+            channelIds: sliced.map((c) => c.id),
+            channelsNum: privateChannels.length,
+        };
     }
 );
 
@@ -682,7 +728,7 @@ export const getSortedDirectChannelWithUnreadsIds = createIdsSelector(
         }, directChannelsIds);
         const directChannels = groupIds.filter((id) => {
             const channel = channels[id];
-            if (channel) {
+            if (channel && channel.is_aengine !== true) {
                 const lastPost = lastPosts[channel.id];
                 return !favoriteIds.includes(id) && !isAutoClosed(config, preferences, channels[id], lastPost ? lastPost.create_at : 0, currentChannelId);
             }

@@ -43,6 +43,9 @@ const state: GlobalState = {
             myMembers: {},
             membersInChannel: {},
             stats: {},
+            aengineRank: -1,
+            aenginePage: 0,
+            aengineOnlyUnReplied: true,
         },
         posts: {
             posts: {},

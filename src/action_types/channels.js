@@ -97,4 +97,6 @@ export default keyMirror({
 
     UPDATED_CHANNEL_SCHEME: null,
     UPDATED_CHANNEL_MEMBER_SCHEME_ROLES: null,
+
+    AENGINE_CHANNEL_FILTER: null,
 });

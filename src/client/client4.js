@@ -1225,9 +1225,9 @@ export default class Client4 {
         );
     };
 
-    getMyChannels = async (teamId, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1) => {
+    getMyChannels = async (teamId, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1, only_unreplied = true) => {
         return this.doFetch(
-            `${this.getUserRoute('me')}/teams/${teamId}/channels${buildQueryString({page, per_page: perPage, rank})}`,
+            `${this.getUserRoute('me')}/teams/${teamId}/channels${buildQueryString({page, per_page: perPage, rank, only_unreplied})}`,
             {method: 'get'}
         );
     };
@@ -1239,9 +1239,9 @@ export default class Client4 {
         );
     };
 
-    getMyChannelMembers = async (teamId, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1) => {
+    getMyChannelMembers = async (teamId, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1, only_unreplied = true) => {
         return this.doFetch(
-            `${this.getUserRoute('me')}/teams/${teamId}/channels/members${buildQueryString({page, per_page: perPage, rank})}`,
+            `${this.getUserRoute('me')}/teams/${teamId}/channels/members${buildQueryString({page, per_page: perPage, rank, only_unreplied})}`,
             {method: 'get'}
         );
     };
@@ -1348,6 +1348,15 @@ export default class Client4 {
 
         return this.doFetch(
             `${this.getPostsRoute()}`,
+            {method: 'post', body: JSON.stringify(post)}
+        );
+    };
+
+    createAenginePost = async (post) => {
+        this.trackEvent('api', 'aneinge_api_posts_create', {channel_id: post.channel_id});
+
+        return this.doFetch(
+            `${this.getPostsRoute()}/aengine`,
             {method: 'post', body: JSON.stringify(post)}
         );
     };

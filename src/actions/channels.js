@@ -467,7 +467,19 @@ export function getChannelAndMyMember(channelId) {
     };
 }
 
-export function fetchMyChannelsAndMembers(teamId, page = 0, perPage = General.CHANNELS_CHUNK_SIZE, rank = -1) {
+// filter: aenginePage, aengineRank, aengineOnlyUnReplied
+export function aengineChannelFilter(filter) {
+    return (dispatch, getState) => {
+        dispatch(batchActions([
+            {
+                type: ChannelTypes.AENGINE_CHANNEL_FILTER,
+                data: filter,
+            },
+        ]), getState);
+    };
+}
+
+export function fetchMyChannelsAndMembers(teamId, page = 0, perPage = General.CHANNELS_CHUNK_SIZE, rank = -1, onlyUnReplyied = true) {
     return async (dispatch, getState) => {
         dispatch(batchActions([
             {
@@ -478,8 +490,8 @@ export function fetchMyChannelsAndMembers(teamId, page = 0, perPage = General.CH
             },
         ]), getState);
 
-        const channelsRequest = Client4.getMyChannels(teamId, page, perPage, rank);
-        const channelMembersRequest = Client4.getMyChannelMembers(teamId, page, perPage, rank);
+        const channelsRequest = Client4.getMyChannels(teamId, page, perPage, rank, onlyUnReplyied);
+        const channelMembersRequest = Client4.getMyChannelMembers(teamId, page, perPage, rank, onlyUnReplyied);
 
         let channels;
         try {
@@ -1362,4 +1374,5 @@ export default {
     markChannelAsUnread,
     favoriteChannel,
     unfavoriteChannel,
+    aengineChannelFilter,
 };

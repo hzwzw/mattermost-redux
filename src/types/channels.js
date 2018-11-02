@@ -53,5 +53,8 @@ export type ChannelsState = {|
     channelsInTeam: { [string]: Array<string> },
     myMembers: { [string]: ChannelMembership },
     membersInChannel: { [string]: { [string]: ChannelMembership } },
-    stats: { [string]: ChannelStats }
+    stats: { [string]: ChannelStats },
+    aengineRank: number,
+    aenginePage: number,
+    aengineOnlyUnReplied: boolean,
 |};
