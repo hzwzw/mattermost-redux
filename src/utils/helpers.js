@@ -113,7 +113,11 @@ export function buildQueryString(parameters) {
     let query = '?';
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
-        query += key + '=' + encodeURIComponent(parameters[key]);
+        let value = parameters[key];
+        if (typeof value === 'boolean') {
+            value = value ? 1 : 0;
+        }
+        query += key + '=' + encodeURIComponent(value);
 
         if (i < keys.length - 1) {
             query += '&';
