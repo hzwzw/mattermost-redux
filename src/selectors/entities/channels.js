@@ -24,6 +24,7 @@ import {getLastPostPerChannel, getAllPosts} from 'selectors/entities/posts';
 import {getCurrentTeamId, getCurrentTeamMembership} from 'selectors/entities/teams';
 import {haveICurrentChannelPermission} from 'selectors/entities/roles';
 import {isCurrentUserSystemAdmin, getCurrentUserId} from 'selectors/entities/users';
+import {getCheckedAengineShopId} from 'selectors/entities/aengineData';
 
 import {
     buildDisplayableChannelList,
@@ -651,11 +652,12 @@ export const getSortedPrivateChannelWithUnreadsIds = createIdsSelector(
 export const getSortedAengineChannelIds = createIdsSelector(
     getCurrentUser,
     getAllChannels,
+    getCheckedAengineShopId,
     getMyChannelMemberships,
     getChannelIdsForCurrentTeam,
     getSortedFavoriteChannelWithUnreadsIds,
     (state) => {return state},
-    (currentUser, channels, myMembers, teamChannelIds, favoriteIds, state) => {
+    (currentUser, channels, shopId, myMembers, teamChannelIds, favoriteIds, state) => {
         if (!currentUser) {
             return [];
         }
@@ -666,14 +668,17 @@ export const getSortedAengineChannelIds = createIdsSelector(
             }
             const channel = channels[id];
             // let condition = !favoriteIds.includes(id) &&
-                let condition =    teamChannelIds.includes(id) &&
-                channel.type === General.PRIVATE_CHANNEL &&
-                channel.is_aengine === true;
+            let condition = teamChannelIds.includes(id) &&
+                            channel.type === General.PRIVATE_CHANNEL &&
+                            channel.is_aengine === true;
             if (aengineRank >= 0 && aengineRank <= 5) {
                 condition = condition && (channel.rank === aengineRank);
             }
             if (aengineOnlyUnReplied) {
                 condition = condition && channel.is_replied === false;
+            }
+            if (shopId) {
+                condition = condition && channel.seller_login_id === shopId;
             }
             return condition;
         }).map((id) => channels[id]).
@@ -809,4 +814,16 @@ export const filterPostIds = (condition) => {
             });
         }
     );
+};
+
+export function getAengineRank(state) {
+    return state.entities.channels.aengineRank;
+};
+
+export function getAenginePage(state) {
+    return state.entities.channels.aenginePage;
+};
+
+export function getAengineOnlyUnReplied(state) {
+    return state.entities.channels.aengineOnlyUnReplied;
 };

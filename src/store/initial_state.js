@@ -64,6 +64,11 @@ const state: GlobalState = {
         preferences: {
             myPreferences: {},
         },
+        aengineData: {
+            orders: {},
+            shops: {},
+            checkedShopId: null,
+        },
         admin: {
             logs: [],
             audits: {},
@@ -384,6 +389,16 @@ const state: GlobalState = {
                 error: null,
             },
             deletePreferences: {
+                status: 'not_started',
+                error: null,
+            },
+        },
+        aengineData: {
+            getAengineShops: {
+                status: 'not_started',
+                error: null,
+            },
+            getAengineOrder: {
                 status: 'not_started',
                 error: null,
             },

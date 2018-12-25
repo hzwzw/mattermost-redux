@@ -117,6 +117,9 @@ export function buildQueryString(parameters) {
         if (typeof value === 'boolean') {
             value = value ? 1 : 0;
         }
+        if (value === null) {
+            continue;
+        }
         query += key + '=' + encodeURIComponent(value);
 
         if (i < keys.length - 1) {

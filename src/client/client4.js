@@ -1225,9 +1225,9 @@ export default class Client4 {
         );
     };
 
-    getMyChannels = async (teamId, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1, only_unreplied = true) => {
+    getMyChannels = async (teamId, shopId=null, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1, only_unreplied = true) => {
         return this.doFetch(
-            `${this.getUserRoute('me')}/teams/${teamId}/channels${buildQueryString({page, per_page: perPage, rank, only_unreplied})}`,
+            `${this.getUserRoute('me')}/teams/${teamId}/channels${buildQueryString({page, per_page: perPage, shopId, rank, only_unreplied})}`,
             {method: 'get'}
         );
     };
@@ -1239,9 +1239,9 @@ export default class Client4 {
         );
     };
 
-    getMyChannelMembers = async (teamId, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1, only_unreplied = true) => {
+    getMyChannelMembers = async (teamId, shopId=null, page = 0, perPage = PER_PAGE_DEFAULT, rank = -1, only_unreplied = true) => {
         return this.doFetch(
-            `${this.getUserRoute('me')}/teams/${teamId}/channels/members${buildQueryString({page, per_page: perPage, rank, only_unreplied})}`,
+            `${this.getUserRoute('me')}/teams/${teamId}/channels/members${buildQueryString({page, per_page: perPage, shopId, rank, only_unreplied})}`,
             {method: 'get'}
         );
     };
@@ -1335,6 +1335,21 @@ export default class Client4 {
             `${this.getChannelRoute(channelId)}/members/${userId}/schemeRoles`,
             {method: 'put', body: JSON.stringify(body)}
         );
+    };
+
+    // Aengine
+    getAengineRoute() {
+        return `${this.getBaseRoute()}/aengine`;
+    }
+
+    getAengineOrder = async (orderId) => {
+        return this.doFetch(`${this.getAengineRoute()}/order/${orderId}`,
+            {method: 'get'});
+    };
+
+    getAengineShops = async () => {
+        return this.doFetch(`${this.getAengineRoute()}/shops`,
+            {method: 'get'});
     };
 
     // Post Routes

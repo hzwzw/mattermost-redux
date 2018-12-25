@@ -479,7 +479,7 @@ export function aengineChannelFilter(filter) {
     };
 }
 
-export function fetchMyChannelsAndMembers(teamId, page = 0, perPage = General.CHANNELS_CHUNK_SIZE, rank = -1, onlyUnReplyied = true) {
+export function fetchMyChannelsAndMembers(teamId, shopId = null, page = 0, perPage = General.CHANNELS_CHUNK_SIZE, rank = -1, onlyUnReplyied = true) {
     return async (dispatch, getState) => {
         dispatch(batchActions([
             {
@@ -490,8 +490,8 @@ export function fetchMyChannelsAndMembers(teamId, page = 0, perPage = General.CH
             },
         ]), getState);
 
-        const channelsRequest = Client4.getMyChannels(teamId, page, perPage, rank, onlyUnReplyied);
-        const channelMembersRequest = Client4.getMyChannelMembers(teamId, page, perPage, rank, onlyUnReplyied);
+        const channelsRequest = Client4.getMyChannels(teamId, shopId, page, perPage, rank, onlyUnReplyied);
+        const channelMembersRequest = Client4.getMyChannelMembers(teamId, shopId, page, perPage, rank, onlyUnReplyied);
 
         let channels;
         try {
